@@ -119,14 +119,13 @@ exports.getTicketById = async (req, res, next) => {
       const id = req.params.id;
       const ticket = await Ticket.findOne({ id })
         .select("-_id -__v")
-        .populate({
-          path: 'replies',
-          populate: {
+        .populate([{
+          path: 'replies', populate: {
             path: 'sender',
             model: 'User',
-            select: 'discordId avatar'
+            select: 'discordId avatar username'
           }
-        })
+        }, { path: 'sender', select: '-guilds' }])
         .lean();
       res.status(200).json(ticket);
     } else {
