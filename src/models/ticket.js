@@ -3,6 +3,10 @@ const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const ticketSchema = Schema({
+  id: {
+    type: String,
+    unique: true,
+  },
   subject: {
     type: String,
     maxLength: 100,
@@ -37,8 +41,8 @@ const ticketSchema = Schema({
         required: true,
       },
       isStaff: {
-          type: Boolean,
-          required: true,
+        type: Boolean,
+        required: true,
       }
     },
   ],

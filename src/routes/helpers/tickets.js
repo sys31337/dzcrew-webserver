@@ -8,6 +8,6 @@ router.get('/current', getUserTickets);
 router.get('/', getTickets);
 router.get('/:id', getTicketById);
 router.patch('/:id', updateTicket);
-router.post('/', ticketAddValidator, addTicket);
+router.post('/', addTicket);
 
 module.exports = router;

@@ -11,11 +11,20 @@ const db = require("./database/database");
 const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const origins = process.env.FRONTEND_ORIGIN.split(' ');
 const corsOptions = {
-  origin: process.env.FRONTEND_ORIGIN,
+  origin: function (origin, callback) {
+    console.log(origin)
+    if (!origin || origins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
   credentials: true,
   optionSuccessStatus: 200,
-};
+}
+
 
 app.use(cors(corsOptions));
 app.use(

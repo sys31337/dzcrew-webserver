@@ -11,7 +11,7 @@ router.get("/", (req, res) => {
   res.redirect(process.env.DISCORD_LOGIN);
 });
 router.get("/redirect", (req, res) => {
-  res.redirect(process.env.FRONTEND_ORIGIN);
+  res.redirect(process.env.REDIRECT_URL);
 });
 
 router.get("/logout", (req, res) => {

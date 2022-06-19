@@ -2,27 +2,34 @@ const express = require("express");
 const { v4: uuidv4 } = require("uuid");
 const Ticket = require("../models/ticket");
 const DiscordUser = require("../models/DiscordUser");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v10");
+const rest = new REST({ version: "10" }).setToken(process.env.BOT_TOKEN);
+
 const path = require("path");
 
 exports.updateTicket = async (req, res, next) => {
   try {
+    req.user = { discordId: 536889212230696960 }
+
     if (req.user) {
       const { id } = req.params;
-      const { reply, closeTicket } = req.body;
-      const status = closeTicket ? "processed" : "processing";
-      const { roles } = await rest.get(
-        Routes.guildMember(process.env.GUILD_ID, req.user.discordId)
-      );
+      const { message, closeTicket } = req.body;
+      const { discordId } = req.user;
+      const { roles } = await rest.get(Routes.guildMember(process.env.GUILD_ID, req.user.discordId));
+
+      const { _id: sender } = await DiscordUser.findOne({ discordId });
       const staffRoles = process.env.STAFFROLES.split(" ");
-      const isStaff = roles.some((r) => staffRoles.indexOf(r) >= 0);
-      const replyPayload = { ...reply, isStaff };
-      const ticket = await Ticket.findByIdAndUpdate(
+      const status = closeTicket ? "processed" : "processing";
+      const isStaff = roles.some((r) => staffRoles.indexOf(r) >= 0)
+      const replyPayload = { sender, message, isStaff };
+      const ticket = await Ticket.findOneAndUpdate(
         id,
         {
           status,
           $push: { replies: replyPayload },
         },
-        { new: true }
+        { new: true, useFindAndModify: false }
       );
       res.status(200).json(ticket);
     } else {
@@ -50,6 +57,7 @@ exports.getTickets = async (req, res, next) => {
 
 exports.addTicket = async (req, res, next) => {
   try {
+    const ticketId = uuidv4().split('-')[0]
     if (req.user) {
       const Files = [];
       const dbFiles = [];
@@ -75,7 +83,7 @@ exports.addTicket = async (req, res, next) => {
       const user = await DiscordUser.findOne({ discordId })
         .select("_id")
         .lean();
-      const ticketPayload = { ...body, sender: user._id, attachments: dbFiles };
+      const ticketPayload = { ...body, id: ticketId, sender: user._id, attachments: dbFiles };
       const preCreateTicket = await Ticket.create({ ...ticketPayload });
       const createTicket = await Ticket.findById(preCreateTicket._id)
         .populate("author", "firstName lastName")
@@ -108,12 +116,19 @@ exports.getUserTickets = async (req, res, next) => {
 exports.getTicketById = async (req, res, next) => {
   try {
     if (req.user) {
-      const ticketId = req.params.id;
-      const ticket = await Ticket.findById(postId)
+      const id = req.params.id;
+      const ticket = await Ticket.findOne({ id })
         .select("-_id -__v")
-        .populate("sender", "firstName lastName")
+        .populate({
+          path: 'replies',
+          populate: {
+            path: 'sender',
+            model: 'User',
+            select: 'discordId avatar'
+          }
+        })
         .lean();
-      res.status(200).json(post);
+      res.status(200).json(ticket);
     } else {
       res.sendStatus(401);
     }
