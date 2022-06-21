@@ -10,11 +10,9 @@ const path = require("path");
 
 exports.updateTicket = async (req, res, next) => {
   try {
-    req.user = { discordId: 536889212230696960 }
-
     if (req.user) {
       const { id } = req.params;
-      const { message, closeTicket } = req.body;
+      const { comment: message, closeTicket } = req.body;
       const { discordId } = req.user;
       const { roles } = await rest.get(Routes.guildMember(process.env.GUILD_ID, req.user.discordId));
 

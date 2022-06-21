@@ -46,6 +46,6 @@ const ticketSchema = Schema({
       }
     },
   ],
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model("Ticket", ticketSchema);
