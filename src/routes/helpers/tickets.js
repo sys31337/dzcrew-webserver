@@ -1,13 +1,13 @@
 const router = require("express").Router();
 
-const { getTickets, addTicket, getTicketById, getUserTickets, updateTicket } = require('../../controllers/tickets');
+const ticketsController = require("../../controllers/tickets");
 
-const { ticketAddValidator } = require('../../validators/tickets');
+const { ticketAddValidator } = require("../../validators/tickets");
 
-router.get('/current', getUserTickets);
-router.get('/', getTickets);
-router.get('/:id', getTicketById);
-router.patch('/:id', updateTicket);
-router.post('/', addTicket);
+router.get("/current", ticketsController.getUserTickets);
+router.get("/", ticketsController.getTickets);
+router.get("/:id", ticketsController.getTicketById);
+router.patch("/:id", ticketsController.updateTicket);
+router.post("/", ticketAddValidator, ticketsController.addTicket);
 
 module.exports = router;
