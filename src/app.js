@@ -11,8 +11,9 @@ const db = require("./database/database");
 const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const origins = process.env.FRONTEND_ORIGIN.split(' ');
 const corsOptions = {
-  origin: "*",
+  origin: "https://dcroleplay.com/",
   credentials: true,
   optionSuccessStatus: 200,
 }
