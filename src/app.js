@@ -3,7 +3,7 @@ require("./strategies/discordstrategy");
 const express = require("express");
 const fileupload = require("express-fileupload");
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const passport = require("passport");
