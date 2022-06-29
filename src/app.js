@@ -58,6 +58,13 @@ app.use(
 
 app.use(express.static(path.join(__dirname, "public")));
 
+app.all('*', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', '*');
+  next();
+});
+
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
