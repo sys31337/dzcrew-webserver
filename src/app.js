@@ -49,21 +49,14 @@ app.use(
     cookie: {
       maxAge: 60000 * 60 * 24,
     },
-    saveUninitialized: true,
-    resave: true,
+    saveUninitialized: false,
+    resave: false,
     name: "discord.oauth2",
     store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
 app.use(express.static(path.join(__dirname, "public")));
-
-app.all('*', (req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'PUT, GET, POST, DELETE, OPTIONS');
-  res.header('Access-Control-Allow-Headers', '*');
-  next();
-});
 
 // Passport
 app.use(passport.initialize());
