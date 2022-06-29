@@ -21,11 +21,9 @@ passport.use(new DiscordStrategy({
     scope: ['identify', 'guilds']
 }, async (accessToken, refreshToken, profile, done) => {
     try {
-        console.log(profile)
         const user = await DiscordUser.findOne({ discordId: profile.id });
         if(user)
         {
-            console.log("User exists.");
             await user.updateOne({
                 username: `${profile.username}#${profile.discriminator}`,
                 avatar: `${profile.avatar}`,
@@ -34,7 +32,6 @@ passport.use(new DiscordStrategy({
             done(null, user);
         }
         else {
-            console.log("User does not exist");
             const newUser = await DiscordUser.create({
                 discordId: profile.id,
                 username: profile.username,

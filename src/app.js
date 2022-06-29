@@ -19,7 +19,6 @@ const corsOptions = {
   "https://dcroleplay.com",
   "https://62bb5d6be0ab0500096efd30--heartfelt-piroshki-cda9c1.netlify.app/"],
   credentials: true,
-  optionSuccessStatus: 200,
 }
 
 
