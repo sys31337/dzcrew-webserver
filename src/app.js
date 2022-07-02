@@ -12,18 +12,20 @@ const path = require("path");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const origins = process.env.FRONTEND_ORIGIN.split(' ');
-console.log(origins);
-const corsOptionsDelegate = (req, callback) => {
-  let corsOptions;
-  if (origins.indexOf(req.header('Origin')) !== -1) {
-    corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
-  } else {
-    corsOptions = { origin: false } // disable CORS for this request
-  }
-  callback(null, corsOptions) // callback expects two parameters: error and options
+const corsOptions = {
+  origin: function (origin, callback) {
+    console.log(origin)
+    if (!origin || origins.indexOf(origin) !== -1) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  credentials: true,
+  optionSuccessStatus: 200,
 }
 
-app.use(cors(corsOptionsDelegate));
+app.use(cors(corsOptions));
 app.use(
   fileupload({
     limits: {
