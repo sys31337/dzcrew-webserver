@@ -2,9 +2,9 @@ const jwt = require("jsonwebtoken");
 
 exports.auth = (req, res, next) => {
   if (req.user) {
-    if (req.user.discordId === "273121308093710346") {
+    // if (req.user.discordId === "273121308093710346") {
       return next();
-    }
+    // }
   }
   const token = req.headers.authorization?.split(" ")[1];
   if (token) {
