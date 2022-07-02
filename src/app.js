@@ -13,12 +13,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const origins = process.env.FRONTEND_ORIGIN.split(' ');
 const corsOptions = {
-  origin: ["https://dcroleplay.com",
-  "https://www.dcroleplay.com",
-  "http://www.dcroleplay.com",
-  "http://dcroleplay.com",
-  "http://main--heartfelt-piroshki-cda9c1.netlify.app",
-  "https://main--heartfelt-piroshki-cda9c1.netlify.app"],
+  origin: "*",
   credentials: true,
 }
 
