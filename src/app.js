@@ -24,6 +24,16 @@ const corsOptions = {
   credentials: true,
 }
 
+const https = require('https');
+const fs = require('fs');
+
+// serve the API with signed certificate on 443 (SSL/HTTPS) port
+const httpsServer = https.createServer({
+  key: fs.readFileSync(path.join(__dirname, "/ssl/ssl.key")),
+  cert: fs.readFileSync(path.join(__dirname, "/ssl/ssl.crt")),
+}, app);
+
+
 app.use(cors(corsOptions));
 app.use(
   fileupload({
@@ -66,9 +76,8 @@ app.use(passport.session());
 
 // Middleware Routes
 app.use("/api", api);
+const hostname = '45.146.254.137';
+httpsServer.listen(443, hostname);
 
-app.listen(PORT, () =>
-  console.log(`Now listening to requests on port ${PORT}`)
-);
 
 // https://discordapp.com/developers/docs/topics/permissions
