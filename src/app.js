@@ -76,8 +76,5 @@ app.use(passport.session());
 
 // Middleware Routes
 app.use("/api", api);
-const hostname = '45.146.254.137';
+const hostname = '176.118.193.146';
 httpsServer.listen(443, hostname);
-
-
-// https://discordapp.com/developers/docs/topics/permissions
